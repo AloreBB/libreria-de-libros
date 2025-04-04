@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block titulo %}{{ libro.titulo }}{% endblock %}
+
+{% block contenido %}
+<div class="container mt-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'listado' %}">Libros</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ libro.titulo }}</li>
+        </ol>
+    </nav>
+
+    <div class="card mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h1 class="card-title h4 mb-0">{{ libro.titulo }}</h1>
+            <span class="badge {% if libro.disponible %}bg-success{% else %}bg-danger{% endif %}">
+                {% if libro.disponible %}Disponible{% else %}Prestado{% endif %}
+            </span>
+        </div>
+        <div class="card-body">
+            <h5 class="card-subtitle mb-3">Autor: {{ libro.autor }}</h5>
+            
+            <dl class="row">
+                <dt class="col-sm-3">ISBN</dt>
+                <dd class="col-sm-9">{{ libro.isbn }}</dd>
+                
+                <dt class="col-sm-3">Fecha de publicación</dt>
+                <dd class="col-sm-9">{{ libro.fecha_publicacion }}</dd>
+                
+                <dt class="col-sm-3">Descripción</dt>
+                <dd class="col-sm-9">{{ libro.descripcion }}</dd>
+            </dl>
+            
+            <div class="mt-4">
+                <p class="text-muted small">
+                    Creado: {{ libro.fecha_creacion }}<br>
+                    Última actualización: {{ libro.fecha_actualizacion }}
+                </p>
+            </div>
+        </div>
+        <div class="card-footer bg-transparent">
+            <div class="btn-group">
+                <a href="{% url 'editar_libro' libro.id %}" class="btn btn-outline-primary">Editar</a>
+                {% if libro.disponible %}
+                <a href="{% url 'prestar_libro' libro.id %}" class="btn btn-outline-success">Prestar</a>
+                {% else %}
+                <a href="{% url 'devolver_libro' libro.id %}" class="btn btn-outline-warning">Devolver</a>
+                {% endif %}
+                {% if libro.disponible %}
+                {% endif %}
+                <a href="{% url 'eliminar_libro' libro.id %}" class="btn btn-outline-danger">Eliminar</a>
+                <a href="{% url 'listado' %}" class="btn btn-outline-secondary">Volver al listado</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

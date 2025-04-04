@@ -1,12 +1,69 @@
-{% extends "base.html" %}
-{% block content %}
-<h1>Listando libros</h1>
-<ol>
-  {% for libro in libros %}
-  <li>
-    {{ libro.titulo }} - {{ libro.autor }} - {{ libro.fecha_publicacion }}
-  </li>
-  {% endfor %}
-</ol>
+{% extends 'base.html' %}
 
-{% endblock content %}
+{% block titulo %}Biblioteca - Listado de Libros{% endblock %}
+
+{% block contenido %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Listado de Libros</h2>
+        <a href="{% url 'crear_libro' %}" class="btn btn-primary">Nuevo Libro</a>
+    </div>
+
+    <!-- Agregar el formulario de búsqueda -->
+    <div class="row mb-4">
+        <div class="col">
+            <form method="get" class="d-flex">
+                <input type="text" name="q" class="form-control me-2" placeholder="Buscar libros..."
+                    value="{{ query|default:'' }}">
+                <button type="submit" class="btn btn-outline-primary">Buscar</button>
+                {% if query %}
+                <a href="{% url 'listado' %}" class="btn btn-outline-secondary ms-2">Limpiar</a>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    <div class="row">
+        {% for libro in libros %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">{{ libro.titulo }}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">{{ libro.autor }}</h6>
+                    <p class="card-text">{{ libro.descripcion|truncatechars:100 }}</p>
+                    <p class="card-text">
+                        <small class="text-muted">ISBN: {{ libro.isbn }}</small><br>
+                        <small class="text-muted">Publicado: {{ libro.fecha_publicacion }}</small>
+                    </p>
+                    <span class="badge {% if libro.disponible %}bg-success{% else %}bg-danger{% endif %}">
+                        {% if libro.disponible %}Disponible{% else %}Prestado{% endif %}
+                    </span>
+                </div>
+                <div class="card-footer bg-transparent">
+                    <div class="btn-group w-100">
+                        <a href="{% url 'detalle_libro' libro.id %}" class="btn btn-sm btn-outline-primary">Ver</a>
+                        <a href="{% url 'editar_libro' libro.id %}" class="btn btn-sm btn-outline-secondary">Editar</a>
+                        <a href="{% url 'eliminar_libro' libro.id %}" class="btn btn-sm btn-outline-danger">Eliminar</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info">
+                No hay libros registrados. ¡Agrega uno nuevo!
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

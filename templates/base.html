@@ -3,13 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Gestor de libros</title>
+    <title>{% block titulo %} Gestor de libros {% endblock titulo %}</title>
+    |
   </head>
   <body>
-    Bienvenido a la página
-
-    {% block content %}
-      Hola, mundo!
-    {% endblock content %}
+    <h1>Bienvenido al Gestor de libros</h1>
+    {% block contenido %} {% endblock contenido %}
   </body>
 </html>
